@@ -1,4 +1,4 @@
-# Ethereum smart-contract examples
+# Ethereum smart-contracts
 
 1. ERC20/223 Token.
 2. Decentrilized Exchange.
