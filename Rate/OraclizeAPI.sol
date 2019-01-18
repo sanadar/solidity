@@ -1,4 +1,5 @@
 // <ORACLIZE_API>
+// Release targetted at solc 0.4.25 to silence compiler warning/error messages, compatible down to 0.4.22
 /*
 Copyright (c) 2015-2016 Oraclize SRL
 Copyright (c) 2016 Oraclize LTD
@@ -28,9 +29,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-// This api is currently targeted at 0.4.18, please import oraclizeAPI_pre0.4.sol or oraclizeAPI_0.4 where necessary
+// This api is currently targeted at 0.4.22 to 0.4.25 (stable builds), please import oraclizeAPI_pre0.4.sol or oraclizeAPI_0.4 where necessary
 
-pragma solidity >=0.4.18;// Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
+pragma solidity >= 0.4.22 < 0.5;// Incompatible compiler version... please select one stated within pragma solidity or use different oraclizeAPI version
 
 contract OraclizeI {
     address public cbAddress;
@@ -361,7 +362,11 @@ contract usingOraclize {
     }
     function __callback(bytes32 myid, string result, bytes proof) public {
       return;
+      // Following should never be reached with a preceding return, however
+      // this is just a placeholder function, ideally meant to be defined in
+      // child contract when proofs are used
       myid; result; proof; // Silence compiler warnings
+      oraclize = OraclizeI(0); // Additional compiler silence about making function pure/view. 
     }
 
     function oraclize_getPrice(string datasource) oraclizeAPI internal returns (uint){
@@ -759,7 +764,7 @@ contract usingOraclize {
         return oraclize.randomDS_getSessionPubKeyHash();
     }
 
-    function getCodeSize(address _addr) constant internal returns(uint _size) {
+    function getCodeSize(address _addr) view internal returns(uint _size) {
         assembly {
             _size := extcodesize(_addr)
         }
